@@ -31,5 +31,5 @@ llm = LlamaCPP(
     verbose=True,
 )
 
-response = llm.complete("วิธีการลดความอ้วน")
+response = llm.complete("วิธีการลดความอ้วนน")
 print(response.text)
