@@ -7,7 +7,7 @@ import os
 import shutil
 
 CHROMA_PATH = "chroma"
-DATA_PATH = "data/books"
+DATA_PATH = "data/bot"
 
 
 def main():
@@ -36,9 +36,9 @@ def split_text(documents: list[Document]): # documents parameter is a list of "D
     chunks = text_splitter.split_documents(documents)
     print(f"Split {len(documents)} documents into {len(chunks)} chunks.")
 
-    document = chunks[10]
-    print(document.page_content)
-    print(document.metadata)
+    # document = chunks[10]
+    # print(document.page_content)
+    # print(document.metadata)
 
     return chunks
 

@@ -31,5 +31,5 @@ llm = LlamaCPP(
     verbose=True,
 )
 
-response = llm.complete("วิธีการลดความอ้วนน")
+response = llm.complete("คนไทยลงทุนในหลักทรัพย์ต่างประเทศได้เท่าไหร่หากไม่ผ่านตัวแทนการลงทุน")
 print(response.text)

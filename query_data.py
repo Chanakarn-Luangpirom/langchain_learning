@@ -8,7 +8,16 @@ from langchain_community.llms import HuggingFaceHub
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 import os
-
+from llama_index import (
+    SimpleDirectoryReader,
+    VectorStoreIndex,
+    ServiceContext,
+)
+from llama_index.llms import LlamaCPP
+from llama_index.llms.llama_utils import (
+    messages_to_prompt,
+    completion_to_prompt,
+)
 
 
 CHROMA_PATH = "chroma"
@@ -37,49 +46,20 @@ def main():
 
     # Search the DB.
     results = db.similarity_search_with_relevance_scores(query_text, k=3)
-    print('abc:',results)
-    print('def:',results[0][1])
-    if len(results) == 0 or results[0][1] < 0.3:
-        print(f"Unable to find matching results.")
-        return
+    print('res',results)
+    
+    # if len(results) == 0 or results[0][1] < 0.3:
+    #     print(f"Unable to find matching results.")
+    #     return
 
     context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
+    print('context_text',context_text)
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     prompt = prompt_template.format(context=context_text, question=query_text)
     print(type(prompt))
-
-
-
-    # Model
-
-    llm = HuggingFaceHub(repo_id="HuggingFaceH4/zephyr-7b-beta",task="text-generation",
-    model_kwargs={
-        "max_new_tokens": 512,
-        "top_k": 30,
-        "temperature": 0.1,
-        "repetition_penalty": 1.03,
-    }
-)
-    template = """{query}"""
-    prompt_template = PromptTemplate(
-        input_variables=["query"], template=template
-    )
-    conv_chain = LLMChain(llm=llm, prompt=prompt_template)    
-    print(prompt_template)
-    print(conv_chain.run(prompt))
+    print(prompt)
     
     model_url = "https://huggingface.co/openthaigpt/openthaigpt-1.0.0-beta-13b-chat-gguf/resolve/main/ggml-model-q4_0.gguf"
-
-    from llama_index import (
-        SimpleDirectoryReader,
-        VectorStoreIndex,
-        ServiceContext,
-    )
-    from llama_index.llms import LlamaCPP
-    from llama_index.llms.llama_utils import (
-        messages_to_prompt,
-        completion_to_prompt,
-    )
 
     llm = LlamaCPP(
         # You can pass in the URL to a GGML model to download it automatically
