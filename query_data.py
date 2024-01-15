@@ -18,6 +18,7 @@ from llama_index.llms.llama_utils import (
     messages_to_prompt,
     completion_to_prompt,
 )
+import google.generativeai as genai
 
 
 CHROMA_PATH = "chroma"
@@ -54,6 +55,7 @@ def main():
 
     context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
     print('context_text',context_text)
+
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     prompt = prompt_template.format(context=context_text, question=query_text)
     print(type(prompt))
@@ -84,6 +86,19 @@ def main():
     print(prompt)
     response = llm.complete(prompt)
     print(response.text) 
+
+    print('--------------------------------------------------------------------------------')
+
+    
+    genai.configure(api_key='')
+
+    model = genai.GenerativeModel('gemini-pro')
+
+
+    response = model.generate_content(prompt)
+
+    print(response.text)
+
     
 if __name__ == "__main__":
     main()
